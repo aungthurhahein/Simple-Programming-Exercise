@@ -204,7 +204,7 @@ def filter_long_words(list_obj,length_obj):
 def is_thisphrase_palindrome(string_obj):
 
 	# remove characters wihtout using str.replace and str.translate
-	chars_remove = ['!',',',' '] 
+	chars_remove = ['!',',','.',' ','?',':',';','-','_'] 
 	cleanup_string = ""
 	ready_string = ""
 
@@ -228,7 +228,7 @@ def is_thisphrase_palindrome(string_obj):
 # for example: The quick brown fox jumps over the lazy dog. 
 # Your task here is to write a function to check a sentence to see if it is a pangram or not.
 def is_pangram(string_obj):
-	alphabet = range(97,122) # ascii code for a-z (you might think why not create A,B,C,D.. The answeer is we don't have time for that)
+	alphabet = range(97,123) # ascii code for a-z (you might think why not create A,B,C,D.. The answeer is we don't have time for that)
 	for char in string_obj:
 		ascii_char = ord(char) 
 		if ascii_char < 97:  # small a is 97,
@@ -241,13 +241,137 @@ def is_pangram(string_obj):
 	else: 
 		return False
 
-
 # "99 Bottles of Beer" is a traditional song in the United States and Canada. 
 # It is popular to sing on long trips, as it has a very repetitive format which is easy to memorize, and 
 # can take a long time to sing. The song's simple lyrics are as follows:
-
+##########################################################################
 # 99 bottles of beer on the wall, 99 bottles of beer.
 # Take one down, pass it around, 98 bottles of beer on the wall.
-
+##########################################################################
 # The same verse is repeated, each time with one fewer bottle. The song is completed when the singer or singers reach zero.
 # Your task here is write a Python program capable of generating all the verses of the song.
+def bottles_of_Beer():	
+	verse = "Take one down,pass it around,"	
+	for i in range(0,100):
+		print str(100-i) + " bottles of beer on the wall," + str(100-i) + " bottles of beer."
+		print verse + str(99-i) + " bottles of beer on the wall.\n"
+
+
+# Represent a small bilingual lexicon as a Python dictionary in the following fashion 
+# {"merry":"god", "christmas":"jul", "and":"och", "happy":gott", "new":"nytt", "year":"r"} 
+# and use it to translate your Christmas cards from English into Swedish. 
+# That is, write a function translate() that takes a list of English words and returns a list of Swedish words.
+
+def bilingual_lexicon(str_obj):
+	lexicon = {"hello" : "mingalar", "holiday":"arrlatyat", "stupid": "ngaPain", "Scumbag": "ngaPwe"}
+	for word,meaning in lexicon.iteritems():
+		if word == str_obj:
+			print meaning
+		
+# Write a function char_freq() that takes a string and builds a frequency listing of the characters contained in it. 
+# Represent the frequency listing as a Python dictionary. 
+# Try it with something like char_freq("abbabcbdbabdbdbabababcbcbab").
+
+def char_freq(str_obj):
+	freq_dict = {}
+	# this can be done with many built-in functions such as count() but let try with set datatype and nested loop
+	unique_chr = list(set(str_obj))  #set is a python datatype that contains unique unordered list
+
+	for char in unique_chr:
+		count = 0
+		for str_char in str_obj:
+			if char == str_char:
+				count += 1
+		freq_dict[char] = count
+	return freq_dict
+
+
+# In cryptography, a Caesar cipher is a very simple encryption techniques in which each letter 
+# in the plain text is replaced by a letter some fixed number of positions down the alphabet. 
+# For example, with a shift of 3, A would be replaced by D, B would become E, and so on. 
+# The method is named after Julius Caesar, who used it to communicate with his generals. 
+# ROT-13 ("rotate by 13 places") is a widely used example of a Caesar cipher where the shift is 13. 
+# In Python, the key for ROT-13 may be represented by means of the following dictionary:
+#
+# key = {'a':'n', 'b':'o', 'c':'p', 'd':'q', 'e':'r', 'f':'s', 'g':'t', 'h':'u', 
+#        'i':'v', 'j':'w', 'k':'x', 'l':'y', 'm':'z', 'n':'a', 'o':'b', 'p':'c', 
+#        'q':'d', 'r':'e', 's':'f', 't':'g', 'u':'h', 'v':'i', 'w':'j', 'x':'k',
+#        'y':'l', 'z':'m', 'A':'N', 'B':'O', 'C':'P', 'D':'Q', 'E':'R', 'F':'S', 
+#        'G':'T', 'H':'U', 'I':'V', 'J':'W', 'K':'X', 'L':'Y', 'M':'Z', 'N':'A', 
+#        'O':'B', 'P':'C', 'Q':'D', 'R':'E', 'S':'F', 'T':'G', 'U':'H', 'V':'I', 
+#        'W':'J', 'X':'K', 'Y':'L', 'Z':'M'}
+
+# Your task in this exercise is to implement an encoder/decoder of ROT-13. 
+# Once you're done, you will be able to read the following secret message:
+
+# Pnrfne pvcure? V zhpu cersre Pnrfne fnynq!
+
+# Note that since English has 26 characters, 
+# your ROT-13 program will be able to both encode and decode texts written in English.
+def rot_13_encode(str_obj):	
+	# instead of using key lookup table,let do by shiffing ascii code to 13 characters
+	# there are many python bulit-in functions to do this task such as maketrans(), translate()
+	result = ""
+	chars_ignore = ['!',',','.',' ','?',':',';','-','_'] #i might miss something. it's dumb but works fine.
+	for character in str_obj:		
+		if not is_member(chars_ignore,character):				
+			ascii_char = ord(character)
+			shift_13 = ascii_char + 13  # shift 13 char
+			if shift_13 >= 123:		  # need to rotate back from a/A for chars out of range
+				shift_13 -= 26				
+			elif ascii_char <= 91 and shift_13 >= 91:  # some math manipulation
+				shift_13 -= 26
+			result += chr(shift_13)
+			print ascii_char,shift_13,character
+		else:
+			result += character
+	return result
+
+def rot_13_decode(str_obj):
+	# i am just being lazy here
+	return rot_13_encode(str_obj)
+
+# Define a simple "spelling correction" function correct() that takes a string and sees to it that 
+# 1) two or more occurrences of the space character is compressed into one, and 
+# 2) inserts an extra space after a period if the period is directly followed by a letter. 
+# E.g. correct("This   is  very funny  and    cool.Indeed!") should return "This is very funny and cool. Indeed!" 
+# Tip: Use regular expressions!
+def spell_checker(str_obj):
+	print str_obj
+
+
+# The third person singular verb form in English is distinguished by the suffix -s, 
+# which is added to the stem of the infinitive form: run -> runs. A simple set of rules can be given as follows:
+# If the verb ends in y, remove it and add ies
+# If the verb ends in o, ch, s, sh, x or z, add es
+# By default just add s
+# Your task in this exercise is to define a function make_3sg_form() which given a verb in infinitive form returns its third person singular form. 
+# Test your function with words like try, brush, run and fix. 
+# Note however that the rules must be regarded as heuristic, 
+# in the sense that you must not expect them to work for all cases. Tip: Check out the string method endswith().
+def make_3sg_form(str_obj):
+	# endswith() check whether string end with a certain character or not(suprise!)
+	# let do without using it
+	str_len = calc_len(str_obj) - 1 
+	str_list = []
+	pluarl_trigger = ['o', 'ch', 's', 'sh', 'x','z']
+	for char in str_obj: 
+		str_list.append(char)
+	if str_list[str_len] == 'y':
+		str_list[str_len] = "ies"
+	elif is_member(pluarl_trigger,str_list[str_len]):
+		str_list[str_len] += "es"
+	else:
+		str_list[str_len] += "s"
+	return ''.join(map(str, str_list)) #map function apply string cast to all list items and join after that
+
+# In English, the present participle is formed by adding the suffix -ing to the infinite form: go -> going. 
+# A simple set of heuristic rules can be given as follows:
+# If the verb ends in e, drop the e and add ing (if not exception: be, see, flee, knee, etc.)
+# If the verb ends in ie, change ie to y and add ing
+# For words consisting of consonant-vowel-consonant, double the final letter before adding ing
+# By default just add ing
+# Your task in this exercise is to define a function make_ing_form() which given a verb in infinitive form returns its present participle form. 
+# Test your function with words such as lie, see, move and hug. However, you must not expect such simple rules to work for all cases.
+
+
