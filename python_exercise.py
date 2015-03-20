@@ -7,6 +7,7 @@ Most of them involve characters, words and phrases, rather than numbers, and
 are therefore suitable for students interested in language rather than math.
 Source : http://www.ling.gu.se/~lager/python_exercises.html
 """
+import sys
 
 # Define a function max() that takes two numbers as arguments and returns the largest of them.
 # Use the if-then-else construct available in Python.
@@ -101,9 +102,9 @@ def is_palindrome(obj):
         if obj[indx] == obj[obj_len-(indx+1)]:  # compare first char and last
             continue
         else:
-            return "False"
+            return False
             exit(1)
-    return "True"
+    return True
 
 
 # Write a function is_member() that takes a value (i.e. a number, string, etc) x and a list of values a, and 
@@ -123,9 +124,9 @@ def overlapping(list_obj1,list_obj2):
     for item1 in list_obj1:
         for item2 in list_obj2:
             if item1 == item2:
-                return "True"
+                return True
                 exit(1)
-    return "False"
+    return False
 
 
 # Define a function generate_n_chars() that takes an integer n and a character c and returns a string, n characters long, 
@@ -331,6 +332,7 @@ def rot_13_decode(str_obj):
     # i am just being lazy here
     return rot_13_encode(str_obj)
 
+# TODO
 # Define a simple "spelling correction" function correct() that takes a string and sees to it that 
 # 1) two or more occurrences of the space character is compressed into one, and 
 # 2) inserts an extra space after a period if the period is directly followed by a letter. 
@@ -365,6 +367,7 @@ def make_3sg_form(str_obj):
         str_list[str_len] += "s"
     return ''.join(map(str, str_list)) # map function apply string cast to all list items and join after that
 
+# TODO
 # In English, the present participle is formed by adding the suffix -ing to the infinite form: go -> going. 
 # A simple set of heuristic rules can be given as follows:
 # If the verb ends in e, drop the e and add ing (if not exception: be, see, flee, knee, etc.)
@@ -407,8 +410,85 @@ def word_map_list_comprehend(list_obj):
 
 # Write a function find_longest_word() that takes a list of words and
 # returns the length of the longest one. Use only higher order functions.
-
 def find_longest_word_high_order(list_obj):
     # reduce is the high order function we should pick from functools module
     return reduce(lambda x, y: calc_len(x) if (calc_len(x) > calc_len(y)) else calc_len(y), list_obj)
 
+
+# Using the higher order function filter(), define a function filter_long_words()
+# that takes a list of words and an integer n and returns the list of words that are longer than n.
+def find_longest_word_filter(list_obj, n):
+    return filter(lambda word: calc_len(word) > n, list_obj)
+
+
+# Represent a small bilingual lexicon as a Python dictionary in the following fashion
+# {"merry":"god", "christmas":"jul", "and":"och", "happy":gott", "new":"nytt", "year":"r"} and
+# use it to translate your Christmas cards from English into Swedish.
+# Use the higher order function map() to write a function translate() that takes a list of English words
+# and returns a list of Swedish words.
+def liningual_lexicon_map(list_obj):
+    bilingual_map = {"merry": "god", "christmas": "jul", "and": "och", "happy": "gott", "new": "nytt", "year": "r"}
+    return map(lambda x:bilingual_map[x], list_obj)
+
+# TODO
+# Implement the higher order functions map(), filter() and reduce().
+# (They are built-in but writing them yourself may be a good exercise.)
+
+#######################################################################
+#
+# Simple exercises including IO
+#
+#######################################################################
+
+# Write a version of a palindrome recogniser that accepts a file name from the user, reads each line, and
+# prints the line to the screen if it is a palindrome.
+
+# file read to python list
+def file_handler(file_handle):
+    file_content = []
+    file_handle = open(file_handle,'r')
+    for line in file_handle:
+        file_content.append(line.strip())
+    return file_content
+
+def palindrome_recogniser(file_obj):
+    list_obj = file_handler(file_obj)
+    list_clean = filter(None, list_obj)  # remove empty lines
+    for line in list_clean:
+        if is_thisphrase_palindrome(line):  # check palindrome by line
+            return "This phrase, {0}, is palindrome".format(line.strip())
+# Usage
+# print palindrome_recogniser(sys.argv[1])
+
+# According to Wikipedia, a semordnilap is a word or phrase that spells a different word or phrase backwards.
+# ("Semordnilap" is itself "palindromes" spelled backwards.)
+# Write a semordnilap recogniser that accepts a file name (pointing to a list of words) from the user
+# and finds and prints all pairs of words that are semordnilaps to the screen.
+# For example, if "stressed" and "desserts" is part of the word list,
+# the the output should include the pair "stressed desserts".
+# Note, by the way, that each pair by itself forms a palindrome!
+
+# let say input is pairs of word in tsv format:
+# desserts  stressed
+# diaper    repaid
+def semordnilap_recogniser(file_obj):
+    list_obj = file_handler(file_obj)
+    semordnilap = []
+    for line in list_obj:
+        word_concat = line.strip()
+        if is_palindrome(word_concat):
+            semordnilap.append(word_concat)
+    return semordnilap
+
+# Write a procedure char_freq_table() that, when run in a terminal,
+# accepts a file name from the user, builds a frequency listing of the characters contained in the file,
+# and prints a sorted and nicely formatted character frequency table to the screen.
+
+def char_freq_table(file_obj):
+    list_obj = file_handler(file_obj)
+    freq_dict ={}
+    for line in list_obj:
+        for char in line:
+
+
+print char_freq_table(sys.argv[1])

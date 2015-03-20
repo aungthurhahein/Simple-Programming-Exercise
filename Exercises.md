@@ -1,8 +1,8 @@
-46 Simple Python Exercises
+### 46 Simple Python Exercises
 
 This is version 0.45 of a collection of simple Python exercises constructed (but in many cases only found and collected) by Torbj�rn Lager (torbjorn.lager@ling.gu.se). Most of them involve characters, words and phrases, rather than numbers, and are therefore suitable for students interested in language rather than math.
 
-Very simple exercises
+#### Very simple exercises
 
 Define a function max() that takes two numbers as arguments and returns the largest of them. Use the if-then-else construct available in Python. (It is true that Python has the max() function built in, but writing it yourself is nevertheless a good exercise.)
 
@@ -87,7 +87,7 @@ For words consisting of consonant-vowel-consonant, double the final letter befor
 By default just add ing
 Your task in this exercise is to define a function make_ing_form() which given a verb in infinitive form returns its present participle form. Test your function with words such as lie, see, move and hug. However, you must not expect such simple rules to work for all cases.
 
-Higher order functions and list comprehensions
+#### Higher order functions and list comprehensions
 
 Using the higher order function reduce(), write a function max_in_list() that takes a list of numbers and returns the largest one. Then ask yourself: why define and call a new function, when I can just as well call the reduce() function directly?
 
@@ -101,7 +101,7 @@ Represent a small bilingual lexicon as a Python dictionary in the following fash
 
 Implement the higher order functions map(), filter() and reduce(). (They are built-in but writing them yourself may be a good exercise.)
 
-Simple exercises including I/O
+#### Simple exercises including I/O
 
 Write a version of a palindrome recogniser that accepts a file name from the user, reads each line, and prints the line to the screen if it is a palindrome.
 
