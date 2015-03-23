@@ -8,6 +8,8 @@ are therefore suitable for students interested in language rather than math.
 Source : http://www.ling.gu.se/~lager/python_exercises.html
 """
 import sys
+import os
+import time
 
 # Define a function max() that takes two numbers as arguments and returns the largest of them.
 # Use the if-then-else construct available in Python.
@@ -43,7 +45,7 @@ def vowel_or_what(obj):
 
     # convert cap to small latter without using str.lower()
     ascii_code = ord(obj)
-    if ascii_code < 97:  # small a is 97
+    if 97 < ascii_code < 122:  # small a is 97 and z is 122
         ascii_code += 32  # for instance, A --> a (a+32)
     small_obj = chr(ascii_code)
 
@@ -313,7 +315,7 @@ def rot_13_encode(str_obj):
     # instead of using key lookup table,let do by shiffing ascii code to 13 characters
     # there are many python bulit-in functions to do this task such as maketrans(), translate()
     result = ""
-    chars_ignore = ['!', ',', '.', ' ', '?', ':', ';', '-', '_'] #i might miss something. it's dumb but works fine.
+    chars_ignore = ['!', ',', '.', ' ', '?', ':', ';', '-', '_'] # i might miss something. it's dumb but works fine.
     for character in str_obj:
         if not is_member(chars_ignore,character):
             ascii_char = ord(character)
@@ -480,15 +482,63 @@ def semordnilap_recogniser(file_obj):
             semordnilap.append(word_concat)
     return semordnilap
 
+
 # Write a procedure char_freq_table() that, when run in a terminal,
 # accepts a file name from the user, builds a frequency listing of the characters contained in the file,
 # and prints a sorted and nicely formatted character frequency table to the screen.
-
 def char_freq_table(file_obj):
     list_obj = file_handler(file_obj)
-    freq_dict ={}
+    freq_dict = {}
+
+    # populate dictionary with all ascii printable characters
+    for ascii in range(32, 127):
+        freq_dict[ascii] = 0
+
     for line in list_obj:
         for char in line:
+            ascii_code = ord(char)
+            freq_dict[ascii_code] += 1
+
+    # display table
+    print "Character", "\t", "Frequency"
+    for key, value in freq_dict.iteritems():
+        print chr(key), '\t', value
 
 
-print char_freq_table(sys.argv[1])
+# The International Civil Aviation Organization (ICAO) alphabet assigns code words to the letters of the English alphabet
+# acrophonically (Alfa for A, Bravo for B, etc.) so that critical combinations of letters (and numbers) can be pronounced
+# and understood by those who transmit and receive voice messages by radio or telephone regardless of their native language,
+# especially when the safety of navigation or persons is essential. Here is a Python dictionary covering one version of the ICAO alphabet:
+
+# d = {'a':'alfa', 'b':'bravo', 'c':'charlie', 'd':'delta', 'e':'echo', 'f':'foxtrot',
+#     'g':'golf', 'h':'hotel', 'i':'india', 'j':'juliett', 'k':'kilo', 'l':'lima',
+#     'm':'mike', 'n':'november', 'o':'oscar', 'p':'papa', 'q':'quebec', 'r':'romeo',
+#     's':'sierra', 't':'tango', 'u':'uniform', 'v':'victor', 'w':'whiskey',
+#    'x':'x-ray', 'y':'yankee', 'z':'zulu'}
+
+# Your task in this exercise is to write a procedure speak_ICAO() able to translate any text (i.e. any string) into spoken ICAO words.
+# You need to import at least two libraries: os and time. On a mac, you have access to the system TTS (Text-To-Speech) as follows:
+# os.system('say ' + msg), where msg is the string to be spoken. (Under UNIX/Linux and Windows,
+# something similar might exist.) Apart from the text to be spoken, your procedure also needs to accept two additional parameters:
+# a float indicating the length of the pause between each spoken ICAO word, and a float indicating the length of the pause between each word spoken.
+
+def speak_ICAO(str_obj, icaotime, wordtime):
+    word_break = [" ", ".", ",", ";", ":", ""]
+    ICAO_Alphabet = {'a': 'alfa', 'b': 'bravo', 'c': 'charlie', 'd': 'delta', 'e': 'echo', 'f': 'foxtrot',
+                     'g':'golf', 'h':'hotel', 'i':'india', 'j':'juliett', 'k':'kilo', 'l':'lima',
+                     'm':'mike', 'n':'november', 'o':'oscar', 'p':'papa', 'q':'quebec', 'r':'romeo',
+                     's':'sierra', 't':'tango', 'u':'uniform', 'v':'victor', 'w':'whiskey',
+                     'x':'x-ray', 'y':'yankee', 'z':'zulu'}
+    for char in str_obj:
+        if is_member(word_break, char):
+            time.sleep(wordtime)
+        else:
+            os.system('espeak ' + ICAO_Alphabet[char.lower()])  # espeak is TTS synthesizer for linux system
+            time.sleep(icaotime)
+
+
+# A hapax legomenon (often abbreviated to hapax) is a word which occurs only once in either the written record of a language,
+# the works of an author, or in a single text.
+# Define a function that given the file name of a text will return all its hapaxes. Make sure your program ignores capitalization.
+
+def hapax()
