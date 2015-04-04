@@ -8,8 +8,11 @@ are therefore suitable for students interested in language rather than math.
 Source : http://www.ling.gu.se/~lager/python_exercises.html
 """
 import sys
+import string
 import os
 import time
+import math
+import random
 
 # Define a function max() that takes two numbers as arguments and returns the largest of them.
 # Use the if-then-else construct available in Python.
@@ -315,7 +318,7 @@ def rot_13_encode(str_obj):
     # instead of using key lookup table,let do by shiffing ascii code to 13 characters
     # there are many python bulit-in functions to do this task such as maketrans(), translate()
     result = ""
-    chars_ignore = ['!', ',', '.', ' ', '?', ':', ';', '-', '_'] # i might miss something. it's dumb but works fine.
+    chars_ignore = ['!', ',', '.', ' ', '?', ':', ';', '-', '_'] # i might miss something. for full list,use string.punctuation
     for character in str_obj:
         if not is_member(chars_ignore,character):
             ascii_char = ord(character)
@@ -430,7 +433,7 @@ def find_longest_word_filter(list_obj, n):
 # and returns a list of Swedish words.
 def liningual_lexicon_map(list_obj):
     bilingual_map = {"merry": "god", "christmas": "jul", "and": "och", "happy": "gott", "new": "nytt", "year": "r"}
-    return map(lambda x:bilingual_map[x], list_obj)
+    return map(lambda x: bilingual_map[x], list_obj)
 
 # TODO
 # Implement the higher order functions map(), filter() and reduce().
@@ -541,4 +544,150 @@ def speak_ICAO(str_obj, icaotime, wordtime):
 # the works of an author, or in a single text.
 # Define a function that given the file name of a text will return all its hapaxes. Make sure your program ignores capitalization.
 
-def hapax()
+def hapax(str_obj):
+    str_result = {}
+    count = 1
+    str = str_obj.translate(string.maketrans("", ""), string.punctuation) # get rid of punctuation
+    str_split = str.split()
+    for word in str_split:
+        small_word = word.lower()
+        if small_word not in str_result:
+            str_result[small_word] = count
+        else:
+            str_result[small_word] = count + int(str_result[small_word])  # increment
+    # display
+    for k, v in str_result.iteritems():
+        if v == 1:
+            print k
+
+
+# Write a program that given a text file will create a new text file in which all the lines from the original file are numbered
+# from 1 to n (where n is the number of lines in the file).
+
+def line_number(file_obj):
+    list_obj = file_handler(file_obj)
+    for line, content in enumerate(list_obj):
+        print line+1, '\t', content
+
+# Write a program that will calculate the average word length of a text stored in a file
+# (i.e the sum of all the lengths of the word tokens in the text, divided by the number of word tokens).
+def avg_word_length(file_obj):
+    word_count = 0
+    word_length = 0
+    list_obj = file_handler(file_obj)
+    for line in list_obj:  # line
+        line = line.translate(string.maketrans("", ""), string.punctuation)  # get rid of punctuation
+        line_split = line.split()
+        for word in line_split:  # word
+            word_count += 1
+            word_length += len(word)
+    print
+    return float(word_length)/float(word_count)
+
+# Write a program able to play the "Guess the number"-game, where the number to be guessed is randomly chosen between 1 and 20.
+# (Source: http://inventwithpython.com) This is how it should work when run in a terminal:
+# >>> import guess_number
+# Hello! What is your name?
+# Torbjrn
+# Well, Torbjrn, I am thinking of a number between 1 and 20.
+# Take a guess.
+# 10
+# Your guess is too low.
+# Take a guess.
+# 15
+# Your guess is too low.
+# Take a guess.
+# 18
+# Good job, Torbjrn! You guessed my number in 3 guesses!
+
+def guess_number():
+    target_number = random.randint(1, 20) # generate a random integer
+    print "Hello! What is your name?"
+    name = raw_input(">>")
+    print "Well, {0}, I am thinking of a number between 1 and 20.".format(name)
+    print "Take a guess"
+    number = int(raw_input(">>"))
+    count = 0
+    while (target_number != number):
+        count += 1
+        if number > target_number:
+            print "Your gues is too high"
+        elif number < target_number:
+            print "Your gues is too low"
+        print "Take a guess"
+        number = int(raw_input(">>"))
+    print "Good job,{0}! You guessed my number {1} in {2} guesses!".format(name,target_number, count)
+
+
+# An anagram is a type of word play, the result of rearranging the letters of a word or phrase to produce a new word or phrase,
+# using all the original letters exactly once;
+# e.g., orchestra = carthorse, A decimal point = I'm a dot in place.
+# Write a Python program that, when started
+# 1) randomly picks a word w from given list of words,
+# 2) randomly permutes w (thus creating an anagram of w),
+# 3) presents the anagram to the user, and
+# 4) enters an interactive loop in which the user is invited to guess the original word.
+# It may be a good idea to work with (say) colour words only. The interaction with the program may look like so:
+
+# >>> import anagram
+# Colour word anagram: onwbr
+# Guess the colour word!
+# black
+# Guess the colour word!
+# brown
+# Correct!
+
+def anagram():
+    color_words = ["amber",
+                    "amethyst",
+                    "apricot",
+                    "aqua",
+                    "aquamarine",
+                    "auburn",
+                    "azure",
+                    "beige",
+                    "black",
+                    "blue",
+                    "bronze",
+                    "brown",
+                    "buff" ]
+
+    random_int = random.randint(0, len(color_words))
+    b4_anagram = color_words[random_int]
+    picked_word = list(b4_anagram) # convert string to list of chars
+    word_len = len(picked_word)
+    anagram_word = ""
+
+    # just a pseudo random generator
+    while word_len != 0:
+        random_pick = random.randint(0, len(picked_word)-1)
+        anagram_word += picked_word[random_pick]
+        del picked_word[random_pick]  # delete a item from list by index
+        word_len -= 1
+
+    # let the game begin
+    print "Color word anagram:{0}".format(anagram_word)
+    print "Guess the colour word!"
+    guess_word = str(raw_input(">>"))
+    while guess_word.lower() != b4_anagram:
+        print "Guess the colour word!"
+        guess_word = str(raw_input(">>"))
+    print "Correct!"
+
+# In a game of Lingo, there is a hidden word, five characters long.
+# The object of the game is to find this word by guessing, and in return receive two kinds of clues:
+# 1) the characters that are fully correct, with respect to identity as well as to position, and
+# 2) the characters that are indeed present in the word, but which are placed in the wrong position.
+# Write a program with which one can play Lingo. Use square brackets to mark characters correct in the sense of
+# 1), and ordinary parentheses to mark characters correct in the sense of
+# 2). Assuming, for example, that the program conceals the word "tiger", you should be able to interact with it in the following way:
+
+# >>> import lingo
+# snake
+# Clue: snak(e)
+# fiest
+# Clue: f[i](e)s(t)
+# times
+# Clue: [t][i]m[e]s
+# tiger
+# Clue: [t][i][g][e][r]
