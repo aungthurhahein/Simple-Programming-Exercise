@@ -601,14 +601,14 @@ def avg_word_length(file_obj):
 # Good job, Torbjrn! You guessed my number in 3 guesses!
 
 def guess_number():
-    target_number = random.randint(1, 20) # generate a random integer
+    target_number = random.randint(1, 20)  # generate a random integer
     print "Hello! What is your name?"
     name = raw_input(">>")
     print "Well, {0}, I am thinking of a number between 1 and 20.".format(name)
     print "Take a guess"
     number = int(raw_input(">>"))
     count = 0
-    while (target_number != number):
+    while target_number != number:
         count += 1
         if number > target_number:
             print "Your gues is too high"
@@ -691,3 +691,57 @@ def anagram():
 # Clue: [t][i]m[e]s
 # tiger
 # Clue: [t][i][g][e][r]
+
+def lingo():
+    words = ["tiger", "snake", "snort", "snail", "sheep", "camel", "turtle", "zebra", "shark", "whale", "gerbil", "koala", "horse", "gecko", "goose"]
+    random_int = random.randint(0, len(words)-1)
+    picked_animal = list(words[random_int])
+    correct_flag = 0
+    while correct_flag == 0:
+        print "Guess animals with 5 lettters"
+        guess = str(raw_input(">>"))
+        tmp_word = ""
+        for i, x in enumerate(guess):
+            if x == picked_animal[i]:
+                tmp_word += "["+x+"]"
+                correct_flag = 1
+            elif x in picked_animal:
+                tmp_word += "(" + x + ")"
+                correct_flag = 0
+            else:
+                tmp_word += x
+                correct_flag = 0
+        print tmp_word
+    print "You got it finally!"
+
+# Somewhat harder exercises
+
+# A sentence splitter is a program capable of splitting a text into sentences.
+# The standard set of heuristics for sentence splitting includes (but isn't limited to) the following rules:
+
+# Sentence boundaries occur at one of "." (periods), "?" or "!", except that
+
+# Periods followed by whitespace followed by a lower case letter are not sentence boundaries.
+# Periods followed by a digit with no intervening whitespace are not sentence boundaries.
+# Periods followed by whitespace and then an upper case letter, but preceded by any of a short list of titles are not sentence boundaries. Sample titles include Mr., Mrs., Dr., and so on.
+# Periods internal to a sequence of letters with no adjacent whitespace are not sentence boundaries (for example, www.aptex.com, or e.g).
+# Periods followed by certain kinds of punctuation (notably comma and more periods) are probably not sentence boundaries.
+# Your task here is to write a program that given the name of a text file is able to write its content with each sentence on a separate line.
+
+# Test your program with the following short text:
+# Mr. Smith bought cheapsite.com for 1.5 million dollars, i.e. he paid a lot for it. Did he mind? Adam Jones Jr. thinks he didn't.
+# In any case, this isn't true... Well, with a probability of .9 it isn't.
+
+# The result should be:
+# Mr. Smith bought cheapsite.com for 1.5 million dollars, i.e. he paid a lot for it.
+# Did he mind?
+# Adam Jones Jr. thinks he didn't.
+# In any case, this isn't true...
+# Well, with a probability of .9 it isn't.
+
+def sentence_splitter(file_obj):
+    list_obj = file_handler(file_obj)
+    for line in list_obj:
+        print line
+
+sentence_splitter("test.txt")
